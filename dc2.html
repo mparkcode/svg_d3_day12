@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.css" type="text/css" />
+    <title>Document</title>
+</head>
+<body>
+    
+    <a href="javascript:dc.filterAll(); dc.renderAll();">Reset</a>
+    <div id="spend-chart"></div>
+    <div id="store-chart"></div>
+    <div id="state-chart"></div>
+    <div id="line-chart"></div>
+    <script>
+        queue()
+        .defer(d3.json, "data/transactions.json")
+        .await(makeCharts);
+        
+        function makeCharts(error, transactionsData){
+            let ndx = crossfilter(transactionsData);
+            
+            let parseDate = d3.time.format("%d/%m/%Y").parse;
+            
+            
+            transactionsData.forEach(function(d){
+                d.date = parseDate(d.date);
+            });
+            
+            let dateDim = ndx.dimension(dc.pluck('date'));
+            let totalSpendByDate = dateDim.group().reduceSum(dc.pluck('spend'));
+            
+            let minDate = dateDim.bottom(1)[0].date;
+            let maxDate = dateDim.top(1)[0].date;
+            
+            let lineSpend = dc.lineChart('#line-chart');
+        
+            lineSpend
+            .width(1000)
+            .height(300)
+            .dimension(dateDim)
+            .group(totalSpendByDate)
+            .x(d3.time.scale().domain([minDate,maxDate]))
+            .xAxisLabel("Month");
+        
+        
+        
+            let nameDim = ndx.dimension(dc.pluck('name'));
+            let totalSpend = nameDim.group().reduceSum(dc.pluck('spend'));
+            
+            let spendChart = dc.barChart("#spend-chart");
+            
+            spendChart
+                .width(300)
+                .height(150)
+                .dimension(nameDim)
+                .group(totalSpend)
+                .x(d3.scale.ordinal())
+                .xUnits(dc.units.ordinal)
+                .xAxisLabel("Person")
+                .yAxis().ticks(4);
+                
+            let storeDim = ndx.dimension(dc.pluck('store'));
+            let totalSpendByStore = storeDim.group().reduceSum(dc.pluck('spend'));
+            
+            let storeChart = dc.barChart("#store-chart");
+            
+            storeChart
+                .width(300)
+                .height(150)
+                .dimension(storeDim)
+                .group(totalSpendByStore)
+                .x(d3.scale.ordinal())
+                .xUnits(dc.units.ordinal)
+                .xAxisLabel("Store")
+                .yAxis().ticks(4);
+                
+            let stateDim = ndx.dimension(dc.pluck('state'));
+            let totalSpendByState = stateDim.group().reduceSum(dc.pluck('spend'));
+            
+            let stateChart = dc.pieChart("#state-chart");
+            
+            stateChart
+                .height(300)
+                .radius(100)
+                .dimension(stateDim)
+                .group(totalSpendByState);
+                
+            
+            
+                
+                
+            
+            dc.renderAll();
+        }
+    </script>
+</body>
+</html>

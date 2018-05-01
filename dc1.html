@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.css" type="text/css" />
+    <title>Document</title>
+</head>
+<body>
+    <div id="spend-chart"></div>
+    <div id="store-chart"></div>
+    <div id="state-chart"></div>
+    <div id="gender-chart"></div>
+    <div id="item-chart"></div>
+    <script>
+        let transactionsData = [
+            { "name": "Tom", "gender": "male", "store": "ACME", "item": "coffee", "state": "NY", "spend": 100 },
+            { "name": "Tom", "gender": "male", "store": "Big Co", "item": "shoes", "state": "NY", "spend": 200 },
+            { "name": "Bob", "gender": "male", "store": "ACME", "item": "pies", "state": "FL", "spend": 150 },
+            { "name": "Bob", "gender": "male", "store": "ACME", "item": "coffee", "state": "NY", "spend": 200 },
+            { "name": "Bob", "gender": "male", "store": "Big Co", "item": "pies", "state": "FL", "spend": 75 },
+            { "name": "Bob", "gender": "male", "store": "Big Co", "item": "magazines","state": "NY", "spend": 50 },
+            { "name": "Alice", "gender": "female", "store": "ACME", "item": "magazines", "state": "FL", "spend": 200 },
+            { "name": "Alice", "gender": "female", "store": "Big Co", "item": "shoes", "state": "NY", "spend": 350 },
+        ];
+
+        let ndx = crossfilter(transactionsData);
+        
+        let nameDim = ndx.dimension(dc.pluck('name'));
+        let totalSpend = nameDim.group().reduceSum(dc.pluck('spend'));
+        
+        let spendChart = dc.barChart("#spend-chart");
+        
+        spendChart
+            .width(300)
+            .height(150)
+            .dimension(nameDim)
+            .group(totalSpend)
+            .x(d3.scale.ordinal())
+            .xUnits(dc.units.ordinal)
+            .xAxisLabel("Person")
+            .yAxis().ticks(4);
+            
+        let storeDim = ndx.dimension(dc.pluck('store'));
+        let totalSpendByStore = storeDim.group().reduceSum(dc.pluck('spend'));
+        
+        let storeChart = dc.barChart("#store-chart");
+        
+        storeChart
+            .width(300)
+            .height(150)
+            .dimension(storeDim)
+            .group(totalSpendByStore)
+            .x(d3.scale.ordinal())
+            .xUnits(dc.units.ordinal)
+            .xAxisLabel("Store")
+            .yAxis().ticks(4);
+            
+        let stateDim = ndx.dimension(dc.pluck('state'));
+        let totalSpendByState = stateDim.group().reduceSum(dc.pluck('spend'));
+        
+        let stateChart = dc.barChart("#state-chart");
+        
+        stateChart
+            .width(300)
+            .height(150)
+            .dimension(stateDim)
+            .group(totalSpendByState)
+            .x(d3.scale.ordinal())
+            .xUnits(dc.units.ordinal)
+            .xAxisLabel("State")
+            .yAxis().ticks(4);
+            
+        let genderDim = ndx.dimension(dc.pluck('gender'));
+        let totalSpendByGender = genderDim.group().reduceSum(dc.pluck('spend'));
+        
+        let genderChart = dc.barChart("#gender-chart");
+        
+        genderChart
+            .width(300)
+            .height(150)
+            .dimension(genderDim)
+            .group(totalSpendByGender)
+            .x(d3.scale.ordinal())
+            .xUnits(dc.units.ordinal)
+            .xAxisLabel("Gender")
+            .yAxis().ticks(4);
+            
+        let itemDim = ndx.dimension(dc.pluck('item'));
+        let totalSpendByItem = itemDim.group().reduceSum(dc.pluck('spend'));
+        
+        let itemChart = dc.barChart("#item-chart");
+        
+        itemChart
+            .width(300)
+            .height(150)
+            .dimension(itemDim)
+            .group(totalSpendByItem)
+            .x(d3.scale.ordinal())
+            .xUnits(dc.units.ordinal)
+            .xAxisLabel("Items")
+            .yAxis().ticks(4);
+            
+        dc.renderAll();
+    </script>
+</body>
+</html>
