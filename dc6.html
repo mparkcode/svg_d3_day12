@@ -8,23 +8,53 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.css" type="text/css" />
+    <link rel="stylesheet" href="dc6.css" type="text/css" />
     <title>Document</title>
 </head>
 <body>
     <h1>Data Visualisation</h1>
-    <div>
-        <h3>Male Female split</h3>
-        <div id="male-female-split"></div>
+    <div class="row">
+        <div class="col-xs-6">
+            <div>
+                <h3>Male Female split</h3>
+                <div id="male-female-split"  class="padding_left"></div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div>
+                <h3>Male Female total salary</h3>
+                <div id="male-female-salary"  class="padding_left"></div>
+            </div>
+        </div>  
     </div>
-    <div>
-        <h3>Male Female total salary</h3>
-        <div id="male-female-salary"></div>
+    
+    <div class="row">
+        <div class="col-xs-6">
+            <div>
+                <h3>Salary per years of service</h3>
+                <div id="salary-per-service"  class="padding_left"></div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div>
+                <h3>Salary per years since phd per profession</h3>
+                <div id="salary-per-phd-per-profession"  class="padding_left"></div>
+            </div>
+        </div>        
     </div>
-    <div>
-        <h3>Salary per years of service</h3>
-        <div id="salary-per-service"></div>
+    
+    <div class="row">
+        <div class="col-xs-6">
+            <div>
+                <h3>Salary per gender since phd per profession</h3>
+                <div id="salary-per-gender-per-profession"  class="padding_left"></div>
+            </div>
+        </div>
     </div>
+
+    
     
     <script type="text/javascript" src="graph4.js"></script>
 </body>
